@@ -10,6 +10,7 @@ export function AuthProvider({ children }) {
 		const storedUser = localStorage.getItem('user');
 		return storedUser ? JSON.parse(storedUser) : null;
 	});
+	const [token, setToken] = useState(() => localStorage.getItem('token') || '');
 
 	useEffect(() => {
 		if (user) {
@@ -19,14 +20,24 @@ export function AuthProvider({ children }) {
 		}
 	}, [user]);
 
+	useEffect(() => {
+		if (token) {
+			localStorage.setItem('token', token);
+		} else {
+			localStorage.removeItem('token');
+		}
+	}, [token]);
+
+	const setSession = ({ token: nextToken, role, name, email }) => {
+		setToken(nextToken || '');
+		setUser({ name, role, email });
+	};
+
 	const login = async (email, password) => {
 		try {
 			const response = await axios.post(`${API_BASE_URL}/api/auth/login`, { email, password });
-			const { token, role, name } = response.data;
-
-			localStorage.setItem('token', token);
-			const nextUser = { name, role, email };
-			setUser(nextUser);
+			const { token: nextToken, role, name, email: resolvedEmail } = response.data;
+			setSession({ token: nextToken, role, name, email: resolvedEmail || email });
 
 			return { role };
 		} catch (error) {
@@ -35,13 +46,31 @@ export function AuthProvider({ children }) {
 		}
 	};
 
+	const register = async (name, email, password) => {
+		try {
+			const response = await axios.post(`${API_BASE_URL}/api/auth/register`, {
+				name,
+				email,
+				password
+			});
+
+			const { token: nextToken, role, email: resolvedEmail } = response.data;
+			setSession({ token: nextToken, role, name, email: resolvedEmail || email });
+
+			return { role };
+		} catch (error) {
+			const message = error.response?.data?.msg || 'Registration failed';
+			return { role: null, error: message };
+		}
+	};
+
 	const logout = () => {
-		localStorage.removeItem('token');
+		setToken('');
 		setUser(null);
 	};
 
 	return (
-		<AuthContext.Provider value={{ user, setUser, login, logout }}>
+		<AuthContext.Provider value={{ user, token, setUser, login, register, logout }}>
 			{children}
 		</AuthContext.Provider>
 	);

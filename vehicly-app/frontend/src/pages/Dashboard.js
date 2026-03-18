@@ -30,12 +30,12 @@ const categories = [
 ];
 
 export default function Dashboard() {
-  const { user, logout } = useContext(AuthContext);
+  const { user, token, logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!localStorage.getItem('token')) navigate('/');
-  }, [navigate]);
+    if (!token) navigate('/');
+  }, [navigate, token]);
 
   const handleLogout = () => {
     logout();

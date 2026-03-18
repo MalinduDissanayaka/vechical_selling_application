@@ -293,6 +293,12 @@ textarea {
   flex-wrap: wrap;
 }
 
+.auth-switch {
+  display: inline-flex;
+  gap: 0.55rem;
+  margin-bottom: 0.85rem;
+}
+
 .pill {
   background: rgba(255, 255, 255, 0.72);
   border: 1px solid rgba(15, 118, 110, 0.19);
@@ -305,6 +311,14 @@ textarea {
 
 .pill:hover {
   background: #ffffff;
+}
+
+.pill-active,
+.pill-active:hover {
+  background: linear-gradient(120deg, var(--accent), #1a9288);
+  color: #f4fcfb;
+  border-color: rgba(15, 118, 110, 0.25);
+  box-shadow: 0 8px 18px rgba(15, 118, 110, 0.28);
 }
 
 .auth-form {
