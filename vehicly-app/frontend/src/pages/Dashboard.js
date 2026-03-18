@@ -10,7 +10,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (!localStorage.getItem('token')) navigate('/');
-  }, []);
+  }, [navigate]);
 
   return (
     <div>
