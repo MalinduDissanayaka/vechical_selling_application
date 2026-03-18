@@ -28,10 +28,10 @@ export function AuthProvider({ children }) {
 			const nextUser = { name, role, email };
 			setUser(nextUser);
 
-			return role;
+			return { role };
 		} catch (error) {
-			alert(error.response?.data?.msg || 'Login failed');
-			return null;
+			const message = error.response?.data?.msg || 'Login failed';
+			return { role: null, error: message };
 		}
 	};
 

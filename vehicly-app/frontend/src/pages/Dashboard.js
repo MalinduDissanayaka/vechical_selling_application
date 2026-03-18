@@ -2,31 +2,84 @@ import { useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 
-const categories = ['car', 'van', 'bus', 'lorry'];
+const categories = [
+  {
+    key: 'car',
+    title: 'Cars',
+    badge: 'Daily Drive',
+    description: 'Balanced comfort and fuel economy for city and highway commutes.'
+  },
+  {
+    key: 'van',
+    title: 'Vans',
+    badge: 'Family Space',
+    description: 'Flexible seating and cargo-friendly layouts for longer trips.'
+  },
+  {
+    key: 'bus',
+    title: 'Buses',
+    badge: 'Commercial',
+    description: 'Reliable larger-capacity options suited for group transport.'
+  },
+  {
+    key: 'lorry',
+    title: 'Lorries',
+    badge: 'Heavy Duty',
+    description: 'Workhorse picks for logistics, hauling, and business operations.'
+  }
+];
 
 export default function Dashboard() {
-  const { user } = useContext(AuthContext);
+  const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!localStorage.getItem('token')) navigate('/');
   }, [navigate]);
 
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
+
   return (
-    <div>
-      <h1>Welcome {user?.name} 👋</h1>
-      <h2>Choose Vehicle Category</h2>
-      <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
-        {categories.map(cat => (
-          <button key={cat} style={{ padding: '20px', fontSize: '20px' }}
-            onClick={() => navigate(`/category/${cat}`)}>
-            🛒 {cat.toUpperCase()}
-          </button>
-        ))}
+    <main className="page dashboard-page">
+      <div className="page-shell">
+        <header className="panel topbar reveal">
+          <div>
+            <span className="eyebrow">Vehicle Hub</span>
+            <h1 className="page-title">Welcome back, {user?.name || 'Driver'}.</h1>
+            <p className="page-subtitle">Choose a category and build your shortlist in just a few clicks.</p>
+          </div>
+
+          <div className="action-strip">
+            <button className="btn btn-secondary" onClick={() => navigate('/cart')}>Open Cart</button>
+            {user?.role === 'admin' && (
+              <button className="btn btn-primary" onClick={() => navigate('/admin')}>Admin Studio</button>
+            )}
+            <button className="btn btn-ghost" onClick={handleLogout}>Log Out</button>
+          </div>
+        </header>
+
+        <section className="category-grid">
+          {categories.map((category, index) => (
+            <article
+              key={category.key}
+              className="category-card reveal"
+              style={{ animationDelay: `${80 * index}ms` }}
+            >
+              <span className="badge badge-soft category-chip">{category.badge}</span>
+              <div>
+                <h3>{category.title}</h3>
+                <p>{category.description}</p>
+              </div>
+              <button className="btn btn-primary" onClick={() => navigate(`/category/${category.key}`)}>
+                Browse {category.title}
+              </button>
+            </article>
+          ))}
+        </section>
       </div>
-      <br />
-      <button onClick={() => navigate('/cart')}>🛍️ Cart</button>
-      {user?.role === 'admin' && <button onClick={() => navigate('/admin')}>🔧 Admin Panel</button>}
-    </div>
+    </main>
   );
 }
