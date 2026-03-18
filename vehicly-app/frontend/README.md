@@ -1,70 +1,124 @@
-# Getting Started with Create React App
+# Vehicly Application
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Vehicly is a full-stack vehicle marketplace app built with React, Node.js, Express, and MongoDB.
 
-## Available Scripts
+The app supports:
+- User registration and login
+- Role-based access (normal user and admin)
+- Vehicle browsing by category
+- Add to cart and checkout flow
+- Admin inventory management (create and delete vehicles)
 
-In the project directory, you can run:
+## Roles and Access
 
-### `npm start`
+### Normal User
+- Can register from the Sign Up form
+- Can login and view dashboard
+- Can browse categories and vehicles
+- Can add vehicles to cart
+- Can checkout from cart
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Admin
+- Can do everything normal users can do
+- Can access admin panel
+- Can create and delete vehicle listings
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Security note:
+- Public registration always creates role user.
+- Admin access is protected by role checks.
 
-### `npm test`
+## Tech Stack
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Frontend: React, React Router, Axios, React Toastify
+- Backend: Node.js, Express, Mongoose, JWT, bcryptjs
+- Database: MongoDB Atlas or local MongoDB
 
-### `npm run build`
+## Project Structure
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+This repository has two main apps:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- backend: REST API and authentication
+- frontend: React client application
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Prerequisites
 
-### `npm run eject`
+- Node.js 18 or later
+- npm
+- MongoDB connection string
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Environment Variables
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Create or update backend/.env:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_secret_key
+PORT=5000
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Optional frontend variable (if backend is not on localhost:5000):
 
-## Learn More
+REACT_APP_API_URL=http://localhost:5000
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Installation
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+From project root:
 
-### Code Splitting
+1. Install backend dependencies
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+cd backend
+npm install
 
-### Analyzing the Bundle Size
+2. Install frontend dependencies
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+cd ../frontend
+npm install
 
-### Making a Progressive Web App
+## Run in Development
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Open two terminals.
 
-### Advanced Configuration
+1. Start backend
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+cd backend
+npm run dev
 
-### Deployment
+2. Start frontend
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+cd frontend
+npm start
 
-### `npm run build` fails to minify
+App URLs:
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:5000
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## API Overview
+
+Authentication:
+- POST /api/auth/register
+- POST /api/auth/login
+
+Vehicles:
+- GET /api/vehicles (public)
+- POST /api/vehicles (admin only)
+- PUT /api/vehicles/:id (admin only)
+- DELETE /api/vehicles/:id (admin only)
+
+## Frontend Scripts
+
+Run from frontend:
+
+- npm start: Start development server
+- npm run build: Build production assets
+- npm test: Run tests
+
+## Backend Scripts
+
+Run from backend:
+
+- npm run dev: Start backend with nodemon
+- npm start: Start backend with node
+
+## Troubleshooting
+
+- If login/register fails with connection errors, make sure backend is running on port 5000.
+- If API responds with database errors, verify MONGO_URI and database user permissions.
+- If frontend cannot call backend, confirm REACT_APP_API_URL and CORS origin settings.
